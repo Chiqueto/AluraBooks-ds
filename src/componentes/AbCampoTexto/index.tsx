@@ -1,6 +1,12 @@
 import React from "react"
 import styled from "styled-components"
 
+export interface AbCampoTextoProps {
+    label: string;
+    placeholder: string;
+    tipo: string;
+}
+
 export const InputEstilizado = styled.div`
     display: flex;
     flex-direction: column;
@@ -25,11 +31,11 @@ export const InputEstilizado = styled.div`
 
 `
 
-export const AbCampoTexto = () => {
+export const AbCampoTexto = ({ label, placeholder, tipo }: AbCampoTextoProps) => {
     return (
         <InputEstilizado>
-            <label>Email</label>
-            <input type="text" />
+            <label>{label}</label>
+            <input type={tipo} placeholder={placeholder} />
         </InputEstilizado>
     )
 }
