@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false  # Crucial para autenticação
       
       - name: Prepare repository
-        run: git fetch --unshallow --tags
+        run: git fetch --tags
       
       - name: Use Node.js 16.x
         uses: actions/setup-node@v3
