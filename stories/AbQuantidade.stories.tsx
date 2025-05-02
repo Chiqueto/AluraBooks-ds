@@ -10,4 +10,4 @@ export default {
 
 const Template: ComponentStory<typeof AbQuantidade> = () => <AbQuantidade />;
 
-export const Primario = Template.bind({});
+export const Primario = Template.bind({}); 
