@@ -42,19 +42,19 @@ jobs:
       
       - name: Build
         run: yarn build
-      
+
+      - name: Configure NPM authentication
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
       - name: Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # auto usa GH_TOKEN por padrão
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          # Configuração necessária para o git
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          
-          # Força a atualização das tags remotas
+
           git tag -d $(git tag -l)
           git fetch --tags
-          
-          # Executa o release
+
           yarn auto shipit --base-branch=main
