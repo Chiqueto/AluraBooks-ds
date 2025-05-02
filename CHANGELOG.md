@@ -1,3 +1,15 @@
+# v0.2.5 (Fri May 02 2025)
+
+#### ⚠️ Pushed to `main`
+
+- feat: add abModal component ([@Chiqueto](https://github.com/Chiqueto))
+
+#### Authors: 1
+
+- Luis Felipe ([@Chiqueto](https://github.com/Chiqueto))
+
+---
+
 # v0.2.4 (Fri May 02 2025)
 
 #### ⚠️ Pushed to `main`
