@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import { useState } from "react"
 
 export interface AbCampoTextoProps {
     label: string;
@@ -32,10 +33,16 @@ export const InputEstilizado = styled.div`
 `
 
 export const AbCampoTexto = ({ label, placeholder, tipo }: AbCampoTextoProps) => {
+    const [valor, setValor] = useState("")
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValor(event.target.value)
+    }
+
     return (
         <InputEstilizado>
             <label>{label}</label>
-            <input type={tipo} placeholder={placeholder} />
+            <input type={tipo} value={valor} placeholder={placeholder} onChange={handleChange} />
         </InputEstilizado>
     )
 }
