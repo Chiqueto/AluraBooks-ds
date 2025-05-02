@@ -1,62 +1,40 @@
+# Name of our action
 name: Release
 
+# The event that will trigger the action
 on:
   push:
     branches: [main]
 
+# what the action will do
 jobs:
   release:
+    # The operating system it will run on
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: write
-
+    # This check needs to be in place to prevent a publish loop with auto and github actions
     if: "!contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'skip ci')"
-
+    # The list of steps that the action will go through
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
+      - uses: actions/checkout@v2
       - name: Prepare repository
-        run: git fetch --tags
-
+        run: git fetch --unshallow --tags
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: 16.x
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
+      - name: Cache node modules
+        uses: actions/cache@v1
         with:
-          path: |
-            node_modules
-            .yarn/cache
+          path: node_modules
           key: yarn-deps-${{ hashFiles('yarn.lock') }}
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build
-        run: yarn build
-
-      - name: Configure NPM authentication
-        run: |
-          echo "registry=https://registry.npmjs.org/" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
-
-      - name: Release
+          restore-keys: |
+            yarn-deps-${{ hashFiles('yarn.lock') }}
+      - name: Create Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          #�� npm token, see https://storybook.js.org/tutorials/design-systems-for-developers/react/en/distribute/ to obtain it
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-
-          git tag -d $(git tag -l)
-          git fetch --tags
-
-          yarn auto shipit --base-branch=main
+          yarn install --frozen-lockfile
+          yarn build
+          yarn release
